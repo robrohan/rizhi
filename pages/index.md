@@ -4,6 +4,6 @@ title: Default install
 
 This is the index page of the site.
 
-* [Testing](#posts/2014/da-jia-hao)
+* [First Post](#posts/2014/da-jia-hao)
 
 
