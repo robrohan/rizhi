@@ -16,11 +16,11 @@ What if you want to just have a simple blog, write posts using your iPad (or oth
 
 How about if you're really lazy, and just want a mildly dynamic [project page on Github](https://pages.github.com)?  Or what if [Creed asks you to setup a blog for him](https://www.youtube.com/watch?v=E9VA8ph5f8o).
 
-The only thing you need to use 日志 is a place put HTML files, and a way to upload markdown files.
+The only thing you need to use 日志 is a place put HTML files, and a way to upload your markdown files.
 
 ## Installation
 
-Upload all the files to a hosting location - Dropbox, S3, an traditional hosting provider, etc.
+Upload all the files to a hosting location - Dropbox, S3, a traditional hosting provider, etc.
 
 Once uploaded browse to the _index.html_ file.  For example: `http://example.com/herp/index.html`.
 
@@ -36,7 +36,7 @@ At the top of the file you can add meta data.  For example, to change the _title
 
 to the very top of the markdown file.
 
-Since there is no server side code running, there isn't a reliable way to create a list of your current posts.  After you write a new post, put it in the _posts_ directory, and are ready to publish, you need to update the _pages/index.md_ file to point to the new file.  
+Since there is no server side code running, there isn't a reliable way to create a list of your current posts.  After you write a new post, and are ready to publish, you need to update the _pages/index.md_ file to point to the new file.  
 
 For example, if you added a post titled 'my-new-post.md' in the _posts/2014_ directory you would add the following line to the _pages/index.md_ file:
 
@@ -47,7 +47,7 @@ The link will then show up on your index page.
 
 ## Problems
 
-* I just felt like writing this one Saturday, it's kind of stream of consciousness coding.  I wouldn't use this for anything incredibly important.
+* It seems to work well, but I just felt like writing this one Saturday.  It's kind of stream of consciousness coding.  I wouldn't use this for anything incredibly important.
 * The client has to have Javascript turned on or the site wont work at all (just the index page will load)
 * Each page load makes several requests back to the server (to load other markdown files)
 
