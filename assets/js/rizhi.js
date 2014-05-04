@@ -11,7 +11,7 @@ RiZhi.content_area = document.getElementById('content')
 RiZhi.converter = new Showdown.converter();
 
 RiZhi.config = {};
-RiZhi.page_headers = {};
+//RiZhi.page_headers = {};
 
 /**
  * Grab the hash from the URL.  That's a rizhi "file name".
@@ -45,6 +45,19 @@ RiZhi.init = function() {
 							RiZhi.content_area,
 							headers_text[1],
 							function() {
+								console.log(1);
+								
+								for(var v in RiZhi.config) {
+									console.log(v);
+									var elements = document.getElementsByClassName(v);
+									console.log(elements);
+									var eln = elements.length;
+									for(var x=0; x<eln; x++) {
+										console.log(elements[x]);
+										elements[x].innerHTML = RiZhi.config[v];
+									}
+								}
+								
 								//After the body text is rendered, rewrite the anchor tags
 								//so linking between posts / pages works.
 								var a_tags = document.getElementsByTagName("a");
@@ -78,9 +91,10 @@ RiZhi.extractHeaders = function(text) {
 			text = text.replace(text_headers[i], '');
 			nv = text_headers[i].split(':');
 			headers[nv[0]] = nv[1];
+			RiZhi.config[nv[0]] = nv[1];
 		}
 	}
-	RiZhi.page_headers = headers;
+	
 	return [headers, text];
 }
 
@@ -123,8 +137,12 @@ RiZhi.loadConfig = function(after_load_callback) {
  */
 RiZhi.loadFile = function(file, callback, error_callback) {
 	var http = new XMLHttpRequest();
-	
-	var url = file; //[file].join('');
+
+	var url = file; 
+	if(RiZhi.config['thwart_cache']) {
+		url = [file, '?c=', new Date().getTime()].join('');		
+	}
+
 	
 	http.open("GET", url, true);
 	http.onreadystatechange = function() {

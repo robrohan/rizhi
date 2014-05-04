@@ -2,17 +2,26 @@ title: 大家好
 author: rob rohan
 date: May 1, 2014
 
-## 大家好
+## 大家好!
 
-这是**我的**日志。如果你要就这是_你的日志_！
+This is an example demo post. The following is a bunch of formatting examples.
 
-[Test link](/)
+Here is some simplified Chinese: 这是我的日志。如果你要就这是_你的日志_！
 
-**Bold** and _italic_
+An example of a link back to the home page: [Test link](/)
 
-![image](https://avatars1.githubusercontent.com/u/29180?s=460 "title here")
+Some basic formatting **Bold** and _italic_
 
-### Third Heading
+### A Third Heading
+
+Here are some dynamic 日志 variable: 
+
+Author: **<span class="author"></span>**
+Blog Name: **<span class="blog_name"></span>**
+
+#### A Forth Heading
+
+Here is a list of items:
 
 * Item one
 * Item two
@@ -20,9 +29,14 @@ date: May 1, 2014
 
 ----
 
-[Rob][named] lives here.
+That's a horizontal rule <sup>/\<sup>
 
-> This should be a block quote
-> Such as it is.
+Here is a named external link: [Rob][named] lives here.
+
+Here comes a block quote:
+
+> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+The end!
 
 [named]: http://robrohan.com
