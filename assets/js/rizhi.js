@@ -45,15 +45,10 @@ RiZhi.init = function() {
 							RiZhi.content_area,
 							headers_text[1],
 							function() {
-								console.log(1);
-								
 								for(var v in RiZhi.config) {
-									console.log(v);
 									var elements = document.getElementsByClassName(v);
-									console.log(elements);
 									var eln = elements.length;
 									for(var x=0; x<eln; x++) {
-										console.log(elements[x]);
 										elements[x].innerHTML = RiZhi.config[v];
 									}
 								}
