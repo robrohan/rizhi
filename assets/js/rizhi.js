@@ -26,6 +26,8 @@ RiZhi.currentFilename = function() {
  * we care about
  */
 RiZhi.init = function() {
+	//This is much more stable (the waterfall method). Nothing can load out of 
+	//sequence, but it's really slow now.  Need to make a synchronizer or something
 	RiZhi.loadConfig(function(){
 		//load the content for the header	
 		RiZhi.loadThemeFile('header', function(){
