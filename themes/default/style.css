@@ -448,6 +448,7 @@ header {
 header h1 {
 	margin-top: 0;
 	margin-bottom: 0;
+	margin-left: 9px;
 }
 header h1 a {
 	text-decoration: none;
