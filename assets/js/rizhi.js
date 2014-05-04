@@ -1,4 +1,5 @@
 /** requires showdown-0.3.1 */
+const RIZHI_CONFIG = 'config.json';
 RiZhi = {}
 /** 
  * The main area where content is loaded into
@@ -8,6 +9,9 @@ RiZhi.content_area = document.getElementById('content')
  * Markdown converter
  */
 RiZhi.converter = new Showdown.converter();
+
+RiZhi.config = {};
+RiZhi.page_headers = {};
 
 /**
  * Grab the hash from the URL.  That's a rizhi "file name".
@@ -22,51 +26,51 @@ RiZhi.currentFilename = function() {
  * we care about
  */
 RiZhi.init = function() {
-	//load the content for the header	
-	RiZhi.loadThemeFile('header');
-	//and load the footer
-	RiZhi.loadThemeFile('footer');
-	
-	//load the actual page contents
-	RiZhi.loadFile(
-		RiZhi.currentFilename(),
-		function(text) {
+	RiZhi.loadConfig(function(){
+		//load the content for the header	
+		RiZhi.loadThemeFile('header', function(){
+			//and load the footer
+			RiZhi.loadThemeFile('footer', function(){
+				//load the actual page contents
+				RiZhi.loadFile(
+					[RiZhi.currentFilename(), '.md'].join(''),
+					function(text) {
+						
+						headers_text = RiZhi.extractHeaders(text);
+						if(headers_text[0]['title']) {
+							document.title = headers_text[0]['title'];
+						}
 			
-			headers_text = RiZhi.extractHeaders(text);
-			if(headers_text[0]['title']) {
-				document.title = headers_text[0]['title'];
-			}
-			
-			RiZhi.displayMarkdown(
-				RiZhi.content_area,
-				headers_text[1],
-				function() {
-					//After the body text is rendered, rewrite the anchor tags
-					//so linking between posts / pages works.
-					//This is kind of lame in that the header could possibly load after
-					//this gets called (since it's all loading in parallel), but I
-					//kind of don't care.
-					var a_tags = document.getElementsByTagName("a");
-					var atl = a_tags.length;
-					for(var q=0; q<atl; q++) {
-						a_tags[q].addEventListener('click', function(){
-							window.location = this.href;
-							window.location.reload()
-						});
+						RiZhi.displayMarkdown(
+							RiZhi.content_area,
+							headers_text[1],
+							function() {
+								//After the body text is rendered, rewrite the anchor tags
+								//so linking between posts / pages works.
+								var a_tags = document.getElementsByTagName("a");
+								var atl = a_tags.length;
+								for(var q=0; q<atl; q++) {
+									a_tags[q].addEventListener('click', function(){
+										window.location = this.href;
+										window.location.reload()
+									});
+								}
+							}
+						)
+					},
+					function(h) {
+						// doh.
+						console.log(h);
 					}
-				}
-			)
-		},
-		function(h) {
-			// doh.
-			console.log(h);
-		}
-	);
+				);
+			});
+		});
+	});
 }
 
 RiZhi.extractHeaders = function(text) {
 	var headers = [];
-	var text_headers = text.match(/^[a-z0-9\ ]+\S?:\S?.+/mig);
+	var text_headers = text.match(/^[a-z0-9]+\S?:\S?.+/mig);
 	if(text_headers) {
 		var hl = text_headers.length;
 		var nv = null;
@@ -76,6 +80,7 @@ RiZhi.extractHeaders = function(text) {
 			headers[nv[0]] = nv[1];
 		}
 	}
+	RiZhi.page_headers = headers;
 	return [headers, text];
 }
 
@@ -90,13 +95,24 @@ RiZhi.extractHeaders = function(text) {
  */
 RiZhi.loadThemeFile = function(id, after_render_callback) {
 	RiZhi.loadFile(
-		[RIZHI_THEME, '/', id].join(''),
+		[RiZhi.config['theme'], '/', id, '.md'].join(''),
 		function(text) {
 			RiZhi.displayMarkdown(
 				document.getElementById(id),
 				text,
 				after_render_callback
 			)
+		}
+	);
+}
+
+RiZhi.loadConfig = function(after_load_callback) {
+	RiZhi.loadFile(
+		RIZHI_CONFIG,
+		function(text) {
+			RiZhi.config = JSON.parse(text);
+			//console.log(RiZhi.config['theme'])
+			if(after_load_callback) after_load_callback();
 		}
 	);
 }
@@ -108,10 +124,7 @@ RiZhi.loadThemeFile = function(id, after_render_callback) {
 RiZhi.loadFile = function(file, callback, error_callback) {
 	var http = new XMLHttpRequest();
 	
-	var url = [
-		/* window.location.protocol, "//", 
-		window.location.hostname, "/", */ file, '.md'
-	].join('');
+	var url = file; //[file].join('');
 	
 	http.open("GET", url, true);
 	http.onreadystatechange = function() {
