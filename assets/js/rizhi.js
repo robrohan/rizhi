@@ -47,6 +47,7 @@ RiZhi.init = function() {
 							RiZhi.content_area,
 							headers_text[1],
 							function() {
+								//Setup the page level, class variables
 								for(var v in RiZhi.config) {
 									var elements = document.getElementsByClassName(v);
 									var eln = elements.length;

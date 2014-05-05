@@ -1,6 +1,6 @@
 title: 大家好
 author: rob rohan
-date: May 1, 2014
+date: May 3, 2014
 
 ## 大家好!
 
@@ -14,10 +14,11 @@ Some basic formatting **Bold** and _italic_
 
 ### A Third Heading
 
-Here are some dynamic 日志 variable: 
+Here are some dynamic 日志 variables: 
 
-Author: **<span class="author"></span>**
-Blog Name: **<span class="blog_name"></span>**
+* The Author: <span class="author"></span>
+* Blog Name: <span class="blog_name"></span>
+* Post (or page) Date: <span class="date"></span>
 
 #### A Forth Heading
 
