@@ -1,3 +1,4 @@
+
 /** requires showdown-0.3.1 */
 const RIZHI_CONFIG = 'config.json';
 RiZhi = {}
@@ -11,14 +12,13 @@ RiZhi.content_area = document.getElementById('content')
 RiZhi.converter = new Showdown.converter();
 
 RiZhi.config = {};
-//RiZhi.page_headers = {};
 
 /**
  * Grab the hash from the URL.  That's a rizhi "file name".
  * Returns the stuff after the hash or 'pages/index' if nothing else
  */
 RiZhi.currentFilename = function() {
-	return window.location.hash.toString().replace('#','') || 'pages/index';
+    return window.location.hash.toString().replace('#','') || 'pages/index';
 }
 
 /**
@@ -29,54 +29,67 @@ RiZhi.init = function() {
 	//This is much more stable (the waterfall method). Nothing can load out of 
 	//sequence, but it's really slow now.  Need to make a synchronizer or something
 	RiZhi.loadConfig(function(){
+
 		//load the content for the header	
 		RiZhi.loadThemeFile('header', function(){
-			//and load the footer
-			RiZhi.loadThemeFile('footer', function(){
-				//load the actual page contents
-				RiZhi.loadFile(
-					[RiZhi.currentFilename(), '.md'].join(''),
-					function(text) {
-						
-						headers_text = RiZhi.extractHeaders(text);
-						if(headers_text[0]['title']) {
-							document.title = headers_text[0]['title'];
-						}
+                    RiZhi.variableFill(document.getElementById('header'));
+                });
+	        //and load the footer
+		RiZhi.loadThemeFile('footer', function(){
+                    RiZhi.variableFill(document.getElementById('footer'));
+                });
+
+		//load the actual page contents
+		RiZhi.loadFile(
+			[RiZhi.currentFilename(), '.md'].join(''),
+			function(text) {
+				headers_text = RiZhi.extractHeaders(text);
+				if(headers_text[0]['title']) {
+				    document.title = headers_text[0]['title'];
+				}
 			
-						RiZhi.displayMarkdown(
-							RiZhi.content_area,
-							headers_text[1],
-							function() {
-								//Setup the page level, class variables
-								for(var v in RiZhi.config) {
-									var elements = document.getElementsByClassName(v);
-									var eln = elements.length;
-									for(var x=0; x<eln; x++) {
-										elements[x].innerHTML = RiZhi.config[v];
-									}
-								}
-								
-								//After the body text is rendered, rewrite the anchor tags
-								//so linking between posts / pages works.
-								var a_tags = document.getElementsByTagName("a");
-								var atl = a_tags.length;
-								for(var q=0; q<atl; q++) {
-									a_tags[q].addEventListener('click', function(){
-										window.location = this.href;
-										window.location.reload()
-									});
-								}
-							}
-						)
-					},
-					function(h) {
-						// doh.
-						console.log(h);
-					}
+				RiZhi.displayMarkdown(
+				    RiZhi.content_area,
+				    headers_text[1],
+				    function() {
+                                        RiZhi.variableFill(RiZhi.content_area);
+				    }
 				);
-			});
-		});
+			},
+			function(h) {
+			    // doh.
+			    console.log(h);
+			}
+		);
 	});
+}
+
+/**
+ * Replace the variables loaded from the config file in the given section
+ * (if no section is given, does the whole document)
+ */
+RiZhi.variableFill = function(section) {
+    var section = section || document;
+
+    //Setup the page level, class variables
+    for(var v in RiZhi.config) {
+	var elements = section.getElementsByClassName(v);
+	var eln = elements.length;
+	for(var x=0; x<eln; x++) {
+	    elements[x].innerHTML = RiZhi.config[v];
+	}
+    }
+    
+    //After the body text is rendered, rewrite the anchor tags
+    //so linking between posts / pages works.
+    var a_tags = section.getElementsByTagName("a");
+    var atl = a_tags.length;
+    for(var q=0; q<atl; q++) {
+	a_tags[q].addEventListener('click', function(){
+	    window.location = this.href;
+	    window.location.reload()
+	});
+    }    
 }
 
 RiZhi.extractHeaders = function(text) {
@@ -123,7 +136,7 @@ RiZhi.loadConfig = function(after_load_callback) {
 		RIZHI_CONFIG,
 		function(text) {
 			RiZhi.config = JSON.parse(text);
-			//console.log(RiZhi.config['theme'])
+
 			if(after_load_callback) after_load_callback();
 		}
 	);
